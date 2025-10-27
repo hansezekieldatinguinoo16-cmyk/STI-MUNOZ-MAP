@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STI Campus Navigator</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html {
+      height: 100%;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background-color: #f4f7f6;
+      color: #333;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    #top-navbar {
+      background: #00005a;
+      color: #f0f0f0;
+      padding: 0.75rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 1200;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    .navbar-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+    .navbar-brand img {
+      width: 45px;
+      height: auto;
+    }
+    .navbar-brand h2 {
+      color: #ffcc00;
+      font-size: 1.25rem;
+      margin: 0;
+    }
+    
+    #navbar-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    .nav-links {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      gap: 0.5rem;
+    }
+    .nav-links li {
+      margin-bottom: 0;
+    }
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      color: #f0f0f0;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 1rem;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .nav-link .fa-fw {
+      width: 1.25em;
+    }
+    .nav-link:hover {
+      background-color: #000033;
+    }
+    .nav-link.active {
+      background-color: #ffcc00;
+      color: #00005a;
+      font-weight: 600;
+    }
+    
+    #main-content {
+      margin-left: 0;
+      width: 100%;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    .main-page-content {
+      display: none;
+    }
+    .main-page-content.active-page {
+      display: block;
+    }
+
+    .page-container {
+      padding: 2.5rem;
+    }
+    .hero-section {
+      background: #00005a;
+      color: white;
+      padding: 4rem 2.5rem;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .hero-section h1 {
+      font-size: 3rem;
+      color: #ffcc00;
+      margin-bottom: 1rem;
+    }
+    .hero-section p {
+      font-size: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .cta-button {
+      background: #ffcc00;
+      color: #00005a;
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .cta-button:hover {
+      background: #ffd633;
+    }
+    .features {
+      margin-top: 2.5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+    .feature-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      text-align: center;
+    }
+    .feature-card .fas {
+      font-size: 2.5rem;
+      color: #00005a;
+      margin-bottom: 1rem;
+    }
+
+
+    #page-map header {
+      background-color: rgba(5, 5, 189, 0.993);
+      color: yellow;
+      padding: 1rem 1.5rem;
+      position: sticky;
+      top: 0; 
+      z-index: 1000;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    #page-map .header-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    #page-map header h1 {
+      font-size: 1.75rem;
+      margin: 0;
+      flex: 1;
+    }
+    #page-map .header-logo img {
+      height: 60px;
+      width: auto;
+    }
+
+    #page-map .tab-nav {
+      display: flex;
+      background-color: #3a3a3a;
+      border-bottom: 2px solid #555;
+      overflow-x: auto;
+    }
+    #page-map .tab-nav button {
+      flex: 1;
+      min-width: 100px;
+      padding: 0.85rem 1rem;
+      background: none;
+      border: none;
+      color: #eee;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 500;
+      transition: background-color 0.3s, color 0.3s;
+      border-bottom: 4px solid transparent;
+    }
+    #page-map .tab-nav button:hover {
+      background-color: #555;
+      color: #fff;
+    }
+    #page-map .tab-nav button.active {
+      background-color: #fff;
+      color: #0000FF;
+      border-bottom: 4px solid #ffcc00;
+    }
+
+    #page-map .tab-content {
+      display: none;
+      background-color: #ffffff;
+      max-width: 1200px;
+      width: 95%;
+      margin: 1.5rem auto;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      border: 1px solid #ddd;
+    }
+    #page-map .tab-content.active {
+      display: block;
+    }
+    #page-map .tab-content h2 {
+      text-align: center;
+      font-size: 2rem;
+      color: #0000FF;
+      margin-bottom: 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    #page-map .tab-content h3 {
+      font-size: 1.5rem;
+      color: #333;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      border-bottom: 2px solid #eee;
+      padding-bottom: 0.5rem;
+    }
+    #page-map .tab-content p {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+
+    #page-map .image-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+    #page-map .image-grid figure {
+      margin: 0;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    #page-map .image-grid figure:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+    }
+    #page-map .image-grid img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      display: block;
+    }
+    #page-map .image-grid figcaption {
+      padding: 0.75rem 1rem;
+      text-align: center;
+      background-color: #f9f9f9;
+      font-size: 0.9rem;
+      color: #555;
+      font-weight: 500;
+    }
+
+    #page-map .single-image img {
+      width: 100%;
+      max-width: 600px;
+      height: auto;
+      display: block;
+      margin: 1rem auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    #page-map .map-container {
+      width: 100%;
+      height: 650px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    #page-map .map-container iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+    
+    #global-footer {
+      background: #333;
+      padding: 1.5rem;
+      text-align: center;
+      color: #aaa;
+      width: 100%;
+    }
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
+    .social-links a {
+      background-color: #555;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 18px;
+      text-decoration: none;
+      transition: background-color 0.3s, transform 0.3s;
+    }
+    .social-links a:hover {
+      background-color: #0000FF;
+      transform: scale(1.1);
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.6);
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 350px;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      color: #333;
+    }
+    .modal-content h2 {
+      margin-bottom: 15px;
+      color: #0000FF;
+    }
+    .modal-content a {
+      color: #0000FF;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .modal-content a:hover {
+      text-decoration: underline;
+    }
+    .close-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #0000FF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: background-color 0.3s;
+    }
+    .close-btn:hover {
+      background: #333;
+    }
+
+    @media (max-width: 850px) {
+      #navbar-toggle {
+        display: block;
+      }
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: #00004a;
+        flex-direction: column;
+        padding: 1rem;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      }
+      .nav-links.active {
+        display: flex;
+      }
+      .nav-links li {
+        width: 100%;
+      }
+      .nav-link {
+        justify-content: flex-start;
+        padding: 0.9rem 1.25rem;
+      }
+      
+      #page-map header {
+        position: static;
+      }
+      .hero-section h1 {
+        font-size: 2.25rem;
+      }
+      .page-container {
+        padding: 1.5rem;
+      }
+      .hero-section {
+        padding: 3rem 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header id="top-navbar">
+    <div class="navbar-container">
+      <a href="#" class="navbar-brand" id="brand-link">
+        <img src="sti.png" alt="STI Logo">
+        <h2>STI Navigator</h2>
+      </a>
+      <nav class="navbar-links-container">
+        <button id="navbar-toggle"><i class="fas fa-bars"></i></button>
+        <ul class="nav-links">
+          <li>
+            <a href="#" class="nav-link active" data-target="page-home">
+              <i class="fas fa-home fa-fw"></i> Home
+            </a>
+          </li>
+          <li>
+            <a href="#" class="nav-link" data-target="page-map">
+              <i class="fas fa-map-marked-alt fa-fw"></i> Campus Map
+            </a>
+          </li>
+          <li>
+            <a href="#" class="nav-link" data-target="page-about">
+              <i class="fas fa-info-circle fa-fw"></i> About Us
+            </a>
+          </li>
+          <li>
+            <a href="#" class="nav-link" data-target="page-contact">
+              <i class="fas fa-envelope fa-fw"></i> Contact
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  
+  <main id="main-content">
+
+    <div id="page-home" class="main-page-content active-page">
+      <div class="page-container">
+        <div class="hero-section">
+          <h1>Welcome to the STI Campus Navigator</h1>
+          <p>Your interactive guide to STI College Muñoz-EDSA. Find buildings, rooms, and facilities with ease.</p>
+          <a href="#" id="home-to-map-btn" class="cta-button">
+            <i class="fas fa-map-signs"></i> Explore the Map
+          </a>
+        </div>
+        <div class="features">
+          <div class="feature-card">
+            <i class="fas fa-search-location"></i>
+            <h3>Interactive Map</h3>
+            <p>Pan, zoom, and explore a detailed campus map.</p>
+          </div>
+          <div class="feature-card">
+            <i class="fas fa-building"></i>
+            <h3>Building Guide</h3>
+            <p>Get photo guides for all floors in all buildings.</p>
+          </div>
+          <div class="feature-card">
+            <i class="fas fa-question-circle"></i>
+            <h3>Get Help</h3>
+            <p>Find contact info and help resources quickly.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="page-map" class="main-page-content">
+      
+      <header>
+        <div class="header-content">
+          <h1>Welcome to STI Map</h1>
+          <div class="header-logo">
+            <img src="sti.png" alt="STI Logo"> 
+          </div>
+        </div>
+      </header>
+
+      <div class="tab-nav">
+        <button class="active" data-target="Map">Map</button> 
+        <button data-target="MainBuilding">Main Building</button>
+        <button data-target="AnnexA">Annex A</button>
+        <button data-target="AnnexB">Annex B</button>
+        <button data-target="Court">Court</button>
+        <button data-target="Canteen">Canteen</button>
+      </div>
+
+      <div id="Map" class="tab-content active">
+        <h2>Campus Map</h2>
+        <div class="map-container">
+          <iframe href="https://www.mappedin.com/" title="Mappedin Map" name="Mappedin Map" allow="clipboard-write 'self' https://app.mappedin.com; web-share 'self' https://app.mappedin.com" scrolling="no" frameborder="0" src="https://app.mappedin.com/map/68d6960cf78d00000be28690?embedded=true"></iframe>
+        </div>
+      </div>
+
+      <div id="MainBuilding" class="tab-content">
+        <h2>MAIN BUILDING</h2>
+        <h3>2ND FLOOR RIGHT SIDE</h3>
+        <div class="image-grid">
+          <figure><img src="stairsmainbuild.jpg" alt="Stairs"><figcaption>Stairs</figcaption></figure>
+          <figure><img src="adminoffice.jpg" alt="Admissions"><figcaption>Admissions Office</figcaption></figure>
+          <figure><img src="macroom.jpg" alt="Mac Room"><figcaption>Mac Room</figcaption></figure>
+          <figure><img src="comlab1.jpg" alt="Com Lab 1"><figcaption>Computer Lab 1</figcaption></figure>
+          <figure><img src="hallwaycomlabs.jpg" alt="Hallway"><figcaption>Computer Labs Hallway</figcaption></figure>
+          <figure><img src="comlab2.jpg" alt="Com Lab 2"><figcaption>Computer Lab 2</figcaption></figure>
+          <figure><img src="misoffice.jpg" alt="MIS Office"><figcaption>MIS Office</figcaption></figure>
+          <figure><img src="comlab3.jpg" alt="Com Lab 3"><figcaption>Computer Lab 3</figcaption></figure>
+          <figure><img src="mainbuildcomproghall.jpg" alt="Prog Hall"><figcaption>Programming Hall</figcaption></figure>
+        </div>
+        <h3>2ND FLOOR</h3>
+        <div class="image-grid">
+          <figure><img src="computerlab.jpg" alt="Com Lab"><figcaption>Computer Lab</figcaption></figure>
+          <figure><img src="cashiers.jpg" alt="Cashiers"><figcaption>Cashier's Office</figcaption></figure>
+          <figure><img src="hallway2ndfloormain.jpg" alt="Hallway"><figcaption>2nd Floor Hallway</figcaption></figure>
+          <figure><img src="registrars.jpg" alt="Registrar"><figcaption>Registrar & Proware</figcaption></figure>
+          <figure><img src="2ndfloormainbathroom.jpg" alt="Restroom"><figcaption>Restroom</figcaption></figure>
+        </div>
+        <h3>3RD FLOOR</h3>
+        <div class="image-grid">
+          <figure><img src="3rdfloormaincharging.jpg" alt="Charging"><figcaption>Charging Station</figcaption></figure>
+          <figure><img src="3rdfloorhallway.jpg" alt="Hallway"><figcaption>3rd Floor Hallway</figcaption></figure>
+          <figure><img src="3rdfloormainhall.jpg" alt="Main Hall"><figcaption>3rd Floor Main Hall</figcaption></figure>
+          <figure><img src="301m.jpg" alt="301M"><figcaption>Room 301M</figcaption></figure>
+          <figure><img src="303m.jpg" alt="303M"><figcaption>Room 303M</figcaption></figure>
+          <figure><img src="library.jpg" alt="Library"><figcaption>Library</figcaption></figure>
+        </div>
+      </div>
+
+      <div id="AnnexA" class="tab-content">
+        <h2>ANNEX-A</h2>
+        <h3>1ST FLOOR</h3>
+        <div class="image-grid">
+          <figure><img src="outsideannexA.jpg" alt="Outside"><figcaption>Outside Annex A</figcaption></figure>
+          <figure><img src="annexA.jpg" alt="Lobby"><figcaption>Annex A Lobby</figcaption></figure>
+          <figure><img src="groundfloormapannexa.jpg" alt="Map"><figcaption>Ground Floor Map</figcaption></figure>
+          <figure><img src="hallway1stfloor.jpg" alt="Hallway"><figcaption>1st Floor Hallway</figcaption></figure>
+          <figure><img src="engineeringlab.jpg" alt="Engg Lab"><figcaption>Engineering Lab</figcaption></figure>
+        </div>
+        <h3>2ND FLOOR</h3>
+        <div class="image-grid">
+          <figure><img src="2ndfloorannexamap.jpg" alt="Map"><figcaption>2nd Floor Map</figcaption></figure>
+          <figure><img src="faculty.jpg" alt="Faculty"><figcaption>Faculty & Dean's Office</figcaption></figure>
+          <figure><img src="physicsandchemlab.jpg" alt="Lab"><figcaption>Physics & Chemistry Lab</figcaption></figure>
+        </div>
+        <h3>3RD FLOOR</h3>
+        <div class="image-grid">
+          <figure><img src="kitchenlab.jpg" alt="Kitchen"><figcaption>Kitchen Laboratory</figcaption></figure>
+          <figure><img src="dininglaboratory.jpg" alt="Dining"><figcaption>Dining Laboratory</figcaption></figure>
+          <figure><img src="hotkitchen1.jpg" alt="Hot Kitchen 1"><figcaption>Hot Kitchen 1</figcaption></figure>
+          <figure><img src="hotkitchen2.jpg" alt="Hot Kitchen 2"><figcaption>Hot Kitchen 2</figcaption></figure>
+          <figure><img src="lockersandfireexit.jpg" alt="Lockers"><figcaption>Lockers & Fire Exit</figcaption></figure>
+        </div>
+      </div>
+
+      <div id="AnnexB" class="tab-content">
+        <h2>ANNEX-B</h2>
+        <h3>1ST FLOOR</h3>
+        <div class="image-grid">
+          <figure><img src="annexB.jpg" alt="Annex B"><figcaption>Annex B</figcaption></figure>
+          <figure><img src="entrancetoannexB.jpeg" alt="Entrance"><figcaption>Entrance</figcaption></figure>
+          <figure><img src="drawinglab.jpeg" alt="Drawing Lab"><figcaption>Drawing Lab</figcaption></figure>
+          <figure><img src="strairsannexB.jpeg" alt="Stairs"><figcaption>Stairs</figcaption></figure>
+          <figure><img src="hallwaytocanteen.jpeg" alt="Hallway"><figcaption>Hallway to Canteen</figcaption></figure>
+          <figure><img src="101B.jpeg" alt="101B"><figcaption>Room 101B</figcaption></figure>
+        </div>
+      </div>
+
+      <div id="Court" class="tab-content">
+        <h2>Court</h2>
+        <div class="single-image">
+          <img src="court.jpg" alt="STI Court">
+        </div>
+      </div>
+
+      <div id="Canteen" class="tab-content">
+        <h2>Canteen</h2>
+        <p>Details about the Canteen.</p>
+      </div>
+    </div>
+    
+    <div id="page-about" class="main-page-content">
+      <div class="page-container">
+        <h2>About This Project</h2>
+        <p>This STI Campus Navigator is a web application designed to help students, faculty, and visitors find their way around the STI College Muñoz-EDSA campus.</p>
+        <p>Our goal is to provide a simple, interactive, and visually rich guide to all the buildings, floors, and important facilities.</p>
+      </div>
+    </div>
+    
+    <div id="page-contact" class="main-page-content">
+      <div class="page-container">
+        <h2>Contact Us</h2>
+        <p>If you have questions, feedback, or notice any errors on the map, please let us know.</p>
+        <ul>
+          <li><strong>Email:</strong> <a href="mailto:support@sti-map.com">support@sti-map.com</a></li>
+          <li><strong>Visit:</strong> The MIS Office (Main Building, 2nd Floor)</li>
+          <li><strong>Facebook:</strong> <a href="https://www.facebook.com/munoz.sti.edu" target="_blank">STI College Muñoz-EDSA</a></li>
+        </ul>
+      </div>
+    </div>
+
+  </main> 
+
+  <footer id="global-footer">
+    <div class="social-links">
+      <a href="https://www.facebook.com/munoz.sti.edu" target="_blank" title="Facebook">
+        <i class="fab fa-facebook-f"></i>
+      </a>
+      <a href="https://www.instagram.com/sticollegemunozedsa" target="_blank" title="Instagram">
+        <i class="fab fa-instagram"></i>
+      </a>
+      <a href="#" id="helpBtn" title="Help">
+        <i class="fas fa-question-circle"></i>
+      </a>
+    </div>
+  </footer>
+
+  <div class="modal" id="helpModal">
+    <div class="modal-content">
+      <h2>Need Help?</h2>
+      <p>Contact us at <a href="mailto:support@sti-map.com">support@sti-map.com</a> or visit the front desk.</p>
+      <button class="close-btn" id="closeModal">Close</button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      
+      const navLinks = document.querySelectorAll('.nav-link');
+      const contentPages = document.querySelectorAll('.main-page-content');
+      const homeToMapButton = document.getElementById('home-to-map-btn');
+      const brandLink = document.getElementById('brand-link');
+
+      const navbarToggle = document.getElementById('navbar-toggle');
+      const navLinksList = document.querySelector('.nav-links');
+      
+      function navigateTo(targetId) {
+        contentPages.forEach(page => {
+          page.classList.remove('active-page');
+        });
+        const targetPage = document.getElementById(targetId);
+        if (targetPage) {
+          targetPage.classList.add('active-page');
+        }
+        navLinks.forEach(link => {
+          link.classList.remove('active');
+          if (link.dataset.target === targetId) {
+            link.classList.add('active');
+          }
+        });
+        
+        if (navLinksList.classList.contains('active')) {
+          navLinksList.classList.remove('active');
+        }
+      }
+      
+      if (navbarToggle) {
+        navbarToggle.addEventListener('click', () => {
+          navLinksList.classList.toggle('active');
+        });
+      }
+
+      navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const targetId = link.dataset.target;
+          navigateTo(targetId);
+        });
+      });
+      
+      if (brandLink) {
+        brandLink.addEventListener('click', (e) => {
+          e.preventDefault();
+          navigateTo('page-home');
+        });
+      }
+      
+      if (homeToMapButton) {
+        homeToMapButton.addEventListener('click', (e) => {
+          e.preventDefault();
+          navigateTo('page-map');
+        });
+      }
+
+
+      const tabs = document.querySelectorAll('#page-map .tab-nav button');
+      const panels = document.querySelectorAll('#page-map .tab-content');
+      
+      if (tabs.length > 0) {
+        tabs.forEach(tab => {
+          tab.addEventListener('click', () => {
+            tabs.forEach(t => t.classList.remove('active'));
+            panels.forEach(p => p.classList.remove('active'));
+            tab.classList.add('active');
+            document.querySelector('#' + tab.dataset.target).classList.add('active');
+          });
+        });
+      }
+
+
+      const helpBtn = document.getElementById("helpBtn");
+      const helpModal = document.getElementById("helpModal");
+      const closeModal = document.getElementById("closeModal");
+
+      if (helpBtn) {
+        helpBtn.addEventListener("click", (e) => { 
+          e.preventDefault();
+          helpModal.style.display = "flex";
+        });
+      }
+
+      if (closeModal) {
+        closeModal.addEventListener("click", () => {
+          helpModal.style.display = "none";
+        });
+      }
+
+      window.addEventListener("click", (e) => {
+        if (e.target === helpModal) {
+          helpModal.style.display = "none";
+        }
+      });
+
+    });
+  </script>
+
+</body>
+</html>
